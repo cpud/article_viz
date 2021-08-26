@@ -1,36 +1,24 @@
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
+#import pickle
 import pandas as pd
-#from .make_tree import make_df
+from .make_plots import make_bars, make_tables
+from .cleaning import prepare_data
 
-default_url = "https://www.youtube.com/watch?v=Rx-hgqChgic"
-#videos = make_df(default_url)
-#videos.to_csv("data/videos.csv")
+all_metrics = pd.DataFrame()
 
-stuff = pd.read_csv('data/friends.csv')
+all_metrics, rabbit_dict, rec_percents, show_minutes, show_depth = prepare_data()
+time_bars, time_scat, vid_rabbit, chan_rabbit = make_bars(all_metrics, rabbit_dict)
+percent, minutes, depth, vids = make_tables(rec_percents, show_minutes, show_depth)
 
 layout = html.Div([
 
     #html.Div([]),
     html.Div([
     html.Center([
-    html.H3("Select a TV show to see a potential YouTube rabbit hole!"),
+    html.H3("Interactive Visualizations!"),
 
-    dcc.Dropdown(id = 'show',
-                 options = [
-                     {'label': 'Community', 'value': 'community_paintball.csv'},
-                     {'label': 'The Office', 'value': 'prison_mike.csv'},
-                     {'label': 'Parks And Recreation', 'value': 'coffee_pot.csv'},
-                     {'label': 'Friends', 'value': 'friends.csv'},
-                     {'label': '30 Rock', 'value': '30rock.csv'}
-             ],
-                 value = 'friends.csv',
-             style = {'width': '60%',
-                      'text-align': 'left',
-                      'padding-left': '420px',
-                      #'display': 'inline-block',
-                     }),
         html.Ul([
             html.Li('The starting node will have a "Depth" of 1. The node will be a \
                 dark purple, so please locate that node to follow the graph.'),
@@ -53,49 +41,34 @@ layout = html.Div([
                 #'padding-top': '20px',
                }),
 
-    #html.Div(id='container-button-basic',
-    #children=[html.Ul(children = [
-    #             html.Li('The video you submitted will have a "depth" of 1. The node will be \
-    #              dark purple, so please locate that node to properly follow the graph.'),
-    #              html.Li('The nodes with multiple connections are "selected" videos, while \
-    #          the other videos will be related videos that were not "selected".'),
-    #              html.Li('Video selection is random.'),
-    #              html.Li("I'd like to include more videos per node, but this app uses up youtube's API \
-    #              quota quickly, so I've limited it to 5."),
-    #              html.Li("I've included a default dataset (Tennis) to display in the case that the API quota \
-    #              has been maxed out, so if you submit a link and it doesn't change, you can assume \
-    #              that the API quota limit has been exceeded."),
-    #              html.Li("'Polarity' refers to the polarity of the title. These polarities come from TextBlob.")
-    #        ]),
-    #    ],
-    #style = {#'padding-left': '80px',
-    #         'width': '49%',
-    #         'display': 'inline-block'
-    #        }),
 
-    # tree plot
+    # plots
     html.Div([
         #dcc.Graph(figure=fig),
-        dcc.Graph(id = 'tree'),
-        dcc.Graph(id = 'minutes'),
-        dcc.Graph(id = 'channels'),
-        #dcc.Graph(figure = fig),
-        #dcc.Graph(figure = fig2),
-        #dcc.Graph(figure = fig3),
-        #dcc.Graph(figure = fig4),
-        #dcc.Graph(figure = fig5),
+        #dcc.Graph(id = 'time_bars'),
+        #dcc.Graph(id = 'time_scat'),
+        #dcc.Graph(id = 'vid_rabbit'),
+        #dcc.Graph(id = 'chan_rabbit'),
+        dcc.Graph(figure = time_bars),
+        #dcc.Graph(figure = time_scat),
+        dcc.Graph(figure = vid_rabbit),
+        dcc.Graph(figure = percent),
+        dcc.Graph(figure = depth)
     ], style = {'width': '49%',
                 'display': 'inline-block'
                }
     ),
 
     html.Div([
-        #dcc.Graph(figure = fig2),
-        dcc.Graph(id = 'likes'),
+        dcc.Graph(figure = time_scat),
+        dcc.Graph(figure = chan_rabbit),
+        dcc.Graph(figure = minutes),
+        dcc.Graph(figure = vids),
+        #dcc.Graph(id = 'likes'),
         #dcc.Graph(figure = fig4),
-        dcc.Graph(id = 'views'),
+        #dcc.Graph(id = 'views'),
         #dcc.Graph(figure = fig6)
-        dcc.Graph(id = 'comments'),
+        #dcc.Graph(id = 'comments'),
     ], style = {'width': '49%',
                 'display': 'inline-block'
                }
@@ -106,24 +79,6 @@ layout = html.Div([
     #            #'display': 'inline-block'
     #            }
     #),
-
-    html.Div([
-    dash_table.DataTable(
-        id = 'table',
-        columns = [{"name": i, "id": i} for i in stuff.columns[:11]],
-        #data = stuff.to_dict('records'),
-        #data = [],
-        style_header={'backgroundColor': 'rgb(30, 30, 30)'},
-        style_cell={
-        'backgroundColor': 'rgb(50, 50, 50)',
-        'color': 'white',
-        'textAlign': 'center'
-    },)
-    ], style = {'width': '98%',
-                'display': 'inline-block'
-                }
-    ),
-
 
 
 

@@ -19,18 +19,7 @@ layout = html.Div([
     html.Center([
     html.H3("Interactive Visualizations!"),
 
-        html.Ul([
-            html.Li('The starting node will have a "Depth" of 1. The node will be a \
-                dark purple, so please locate that node to follow the graph.'),
-            html.Li('The nodes with multiple connections are "selected" videos, while \
-                the other videos will be related videos that were not "selected".'),
-            html.Li("Selected videos were chosen randomly from the videos recommended on \
-                the page with the previous video."),
-            html.Li("The algorithm used to collect the recommended videos only considers \
-                the first 10 recommended videos on the YouTube video page.")
-            ], style = {'text-align': 'left',
-                        'padding-left': '520px',
-                        'padding-up': '50px'}),
+      
         ]),
     #html.Li('The video you submitted will have a "depth" of 1. The node will be \
      #       dark purple, so please locate that node to properly follow the graph.'),
